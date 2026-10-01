@@ -13,7 +13,7 @@ namespace backend_API.Services
         private ILogger _logger;
         private PasswordHasher _passwordHasher;
 
-        public UserService(ILogger logger, IUserRepo userRepo, PasswordHasher passwordHasher)
+        public UserService(ILogger<UserService> logger, IUserRepo userRepo, PasswordHasher passwordHasher)
         {
             _logger = logger;
             _userRepo = userRepo;
