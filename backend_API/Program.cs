@@ -2,6 +2,7 @@ using backend_API.Repositories;
 using backend_API.Repositories.Interfaces;
 using backend_API.Security;
 using backend_API.Services;
+using backend_API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
