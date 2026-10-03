@@ -1,7 +1,10 @@
 ﻿using backend_API.DTO.Auth;
+using backend_API.Exceptions;
 using backend_API.Security;
+using backend_API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
 namespace backend_API.Controllers
 {
@@ -11,25 +14,34 @@ namespace backend_API.Controllers
     {
         private readonly JwtHandler _jwtHandler;
         private readonly ILogger _logger;
+        private readonly IAuthService _authService;
 
-        public AuthController(JwtHandler jwtHandler, ILogger<AuthController> logger)
+        public AuthController(JwtHandler jwtHandler, ILogger<AuthController> logger, IAuthService authService)
         {
             _jwtHandler = jwtHandler;
             _logger = logger;
+            _authService = authService;
         }
 
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public IActionResult Login ([FromBody] LoginDTO dto)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Login ([FromBody] LoginDTO dto)
         {
-            if (dto.Username == "admin" && dto.Password == "1234")
+            string? token = null;
+            try
             {
-                _logger.LogInformation($"Login succesful.: {dto.Username}", dto.Username);
-                var token = _jwtHandler.GenerateToken(dto.Username);
-                return Ok(new { Token = token });
+                token = await _authService.LoginAuth(dto);
+            } catch (KeyNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            } catch (NpgsqlException ex)
+            {
+                return BadRequest(ex.Message);
             }
-            return Unauthorized();
+
+            return token is not null ? Ok(new { Token = token }) : Unauthorized();
         }
 
     }

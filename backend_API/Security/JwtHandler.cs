@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using backend_API.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,11 +15,12 @@ namespace backend_API.Security
             _config = configuration;
         }
 
-        public string GenerateToken(string username)
+        public string GenerateToken(ClaimsModel claimsModel)
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, username)
+                new Claim(ClaimTypes.NameIdentifier, claimsModel.PublicId),
+                new Claim(ClaimTypes.Email, claimsModel.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

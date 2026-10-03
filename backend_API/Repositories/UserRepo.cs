@@ -39,7 +39,7 @@ namespace backend_API.Repositories
             }
         }
 
-        public async Task<GetPublicUserDTO?> GetByInternalIdAsync(int id)
+        public async Task<User?> GetByInternalIdAsync(int id)
         {
             string sqlQuery = "SELECT * FROM users WHERE id = @id";
 
@@ -55,13 +55,16 @@ namespace backend_API.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            return new GetPublicUserDTO
+                            return new User
                             {
-                                UUID = Convert.ToString(reader["public_id"]),
+                                Id = Convert.ToInt32(reader["id"]),
                                 FirstName = Convert.ToString(reader["first_name"]),
                                 LastName = Convert.ToString(reader["last_name"]),
                                 Email = Convert.ToString(reader["email"]),
-                                Username = Convert.ToString(reader["username"])
+                                HashPassword = Convert.ToString(reader["hash_password"]),
+                                Username = Convert.ToString(reader["username"]),
+                                PublicId = Convert.ToString(reader["public_id"]),
+                                IsActive = Convert.ToBoolean(reader["is_active"])
                             };
                         }
                         return null;
@@ -197,6 +200,23 @@ namespace backend_API.Repositories
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
                 {
                     return Convert.ToInt32(await cmd.ExecuteScalarAsync());
+                }
+            }
+        }
+
+        public async Task<string?> GetPublicIdByEmail(string email)
+        {
+            string sqlQuery = "SELECT public_id FROM users WHERE email = @email";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+
+                    return Convert.ToString(await cmd.ExecuteScalarAsync());
                 }
             }
         }

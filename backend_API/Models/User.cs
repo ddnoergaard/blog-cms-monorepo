@@ -8,5 +8,7 @@
         public string Email { get; set; }
         public string HashPassword { get; set; }
         public string Username { get; set; }
+        public string PublicId { get; set; }
+        public bool IsActive { get; set; }
     }
 }

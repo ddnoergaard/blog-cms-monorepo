@@ -1,5 +1,6 @@
 ﻿using backend_API.DTO.User;
 using backend_API.Exceptions;
+using backend_API.Models;
 using backend_API.Repositories.Interfaces;
 using backend_API.Security;
 using backend_API.Services.Interfaces;
@@ -20,7 +21,6 @@ namespace backend_API.Services
             _passwordHasher = passwordHasher;
         }
 
-        //ESSENTIAL START
         public async Task<int> CreateAsync(UserCreateDTO dto) //PASSWORD HASHING MANGLER
         {
             //Password hashing
@@ -46,11 +46,13 @@ namespace backend_API.Services
         /// <summary>
         /// Takes either internal id, or public it. Public id gets converted into internal id
         /// </summary>
-        public async Task<GetPublicUserDTO> GetByIdAsync(int? intId = null, string? publicId = null)
+        public async Task<User> GetByIdAsync(int? intId = null, string? publicId = null)
         {
+            if (intId is not null && publicId is not null) throw new ArgumentException("Can not pass both parameters");
+
             int idToUse = intId is not null ? intId.Value : await _userRepo.GetInternalIdByPublicId(publicId);
 
-            GetPublicUserDTO? dto = new();
+            User? dto = new();
             try
             {
                 dto = await _userRepo.GetByInternalIdAsync(idToUse);
@@ -62,6 +64,7 @@ namespace backend_API.Services
             }
 
             return dto is null ? throw new UserNotFoundException("User not found") : dto;
+
         }
 
         //public async Task<GetPublicUserDTO> GetByPublicIdAsync(string uuid)
@@ -159,6 +162,33 @@ namespace backend_API.Services
                 _logger.LogCritical(ex, "Something unexpected happened");
                 throw new UnexpectedException("Something unexpected happened. Check logs.", ex.InnerException);
             }
+        }
+
+        public async Task<string> GetPublicIdByEmail(string email)
+        {
+            string? publicId = "";
+            try
+            {
+                 publicId = await _userRepo.GetPublicIdByEmail(email);
+            } catch (NpgsqlException ex)
+            {
+                _logger.LogCritical(ex, "Something unexpected happened.");
+                throw;
+            }
+
+            return publicId is not null ? publicId : throw new KeyNotFoundException("No user found with that email");
+        }
+
+        public GetPublicUserDTO ConvertInternalUserToPublic(User internalUser)
+        {
+            return new GetPublicUserDTO
+            {
+                UUID = internalUser.PublicId,
+                FirstName = internalUser.FirstName,
+                LastName = internalUser.LastName,
+                Email = internalUser.Email,
+                Username = internalUser.Username
+            };
         }
     }
 }
