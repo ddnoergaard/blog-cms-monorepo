@@ -41,7 +41,7 @@ namespace backend_API.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return token is not null ? Ok(new { Token = token }) : Unauthorized();
+            return token is not null ? Ok(new { Token = token }) : Unauthorized("Email or password not correct");
         }
 
     }

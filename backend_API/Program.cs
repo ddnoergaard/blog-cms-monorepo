@@ -16,6 +16,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 
 //SERVICES
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 //SECURITY
 builder.Services.AddSingleton<PasswordHasher>();

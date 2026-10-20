@@ -41,7 +41,7 @@ namespace backend_API.Controllers
         [HttpGet("{publicId}", Name = "GetById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByExtId(string publicId)
+        public async Task<IActionResult> GetByExtId(Guid publicId)
         {
             try
             {

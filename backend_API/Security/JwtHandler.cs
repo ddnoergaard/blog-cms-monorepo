@@ -19,7 +19,7 @@ namespace backend_API.Security
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, claimsModel.PublicId),
+                new Claim(ClaimTypes.NameIdentifier, Convert.ToString(claimsModel.PublicId)),
                 new Claim(ClaimTypes.Email, claimsModel.Email)
             };
 

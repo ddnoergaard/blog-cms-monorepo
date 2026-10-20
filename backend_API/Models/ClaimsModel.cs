@@ -4,7 +4,7 @@ namespace backend_API.Models
 {
     public class ClaimsModel
     {
-        public string PublicId { get; set; }
+        public Guid PublicId { get; set; }
         public string Email { get; set; }
     }
 }

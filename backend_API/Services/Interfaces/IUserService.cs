@@ -6,12 +6,12 @@ namespace backend_API.Services.Interfaces
     public interface IUserService
     {
         Task<int> CreateAsync(UserCreateDTO dto);
-        Task<User> GetByIdAsync(int? intId = null, string? publicId = null);
+        Task<User> GetByIdAsync(int? intId = null, Guid? publicId = null);
         //Task<GetPublicUserDTO> GetByPublicIdAsync(string uuid);
-        Task<int> GetInternalIdByPublicId(string uuid);
-        Task SetUserInactiveByInteralId(string uuid);
-        Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, string uuid);
-        Task UpdatePassword(string password, string uuid);
-        Task<string> GetPublicIdByEmail(string email);
+        Task<int> GetInternalIdByPublicId(Guid publicId);
+        Task SetUserInactiveByInteralId(Guid uuid);
+        Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, Guid publicId);
+        Task UpdatePassword(string password, Guid uuid);
+        Task<Guid?> GetPublicIdByEmail(string email);
     }
 }

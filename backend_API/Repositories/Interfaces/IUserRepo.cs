@@ -9,7 +9,7 @@ namespace backend_API.Repositories.Interfaces
         Task DeleteUserByInteralId(int internalId);
         Task<User?> GetByInternalIdAsync(int id);
         Task<GetPublicUserDTO?> GetByPublicIdAsync(string uuid);
-        Task<int> GetInternalIdByPublicId(string publicId);
+        Task<int> GetInternalIdByPublicId(Guid publicId);
         Task SetUserInactiveByInternalId(int internalId);
         Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, int internalId);
         Task UpdatePassword(string password, int internalId);

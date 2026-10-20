@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace backend_API.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly JwtHandler _jwtHandler;
         private readonly IUserService _userService;
@@ -26,7 +26,7 @@ namespace backend_API.Services
 
         public async Task<string?> LoginAuth(LoginDTO loginDTO)
         {
-            string publicId = "";
+            Guid? publicId = Guid.Empty;
             try
             {
                 publicId = await _userService.GetPublicIdByEmail(loginDTO.Email);

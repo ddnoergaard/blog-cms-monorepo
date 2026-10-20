@@ -46,11 +46,11 @@ namespace backend_API.Services
         /// <summary>
         /// Takes either internal id, or public it. Public id gets converted into internal id
         /// </summary>
-        public async Task<User> GetByIdAsync(int? intId = null, string? publicId = null)
+        public async Task<User> GetByIdAsync(int? intId = null, Guid? publicId = null)
         {
             if (intId is not null && publicId is not null) throw new ArgumentException("Can not pass both parameters");
 
-            int idToUse = intId is not null ? intId.Value : await _userRepo.GetInternalIdByPublicId(publicId);
+            int idToUse = intId is not null ? intId.Value : await _userRepo.GetInternalIdByPublicId(publicId.Value);
 
             User? dto = new();
             try
@@ -83,7 +83,7 @@ namespace backend_API.Services
         //    return dto is null ? throw new UserNotFoundException("User not found") : dto;
         //}
 
-        public async Task<int> GetInternalIdByPublicId(string uuid)
+        public async Task<int> GetInternalIdByPublicId(Guid uuid)
         {
             try
             {
@@ -97,12 +97,12 @@ namespace backend_API.Services
         }
 
 
-        public async Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, string uuid)
+        public async Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, Guid publicId)
         {
             int internalId = 0;
             try
             {
-                internalId = await GetInternalIdByPublicId(uuid);
+                internalId = await GetInternalIdByPublicId(publicId);
             }
             catch { throw; }
 
@@ -122,7 +122,7 @@ namespace backend_API.Services
             }
         }
 
-        public async Task UpdatePassword(string password, string uuid)
+        public async Task UpdatePassword(string password, Guid uuid)
         {
             int internalId = 0;
             try
@@ -144,7 +144,7 @@ namespace backend_API.Services
             }
         }
 
-        public async Task SetUserInactiveByInteralId(string uuid)
+        public async Task SetUserInactiveByInteralId(Guid uuid)
         {
             int interalId = 0;
             try
@@ -164,12 +164,12 @@ namespace backend_API.Services
             }
         }
 
-        public async Task<string> GetPublicIdByEmail(string email)
+        public async Task<Guid?> GetPublicIdByEmail(string email)
         {
-            string? publicId = "";
+            Guid? publicId = Guid.Empty;
             try
             {
-                 publicId = await _userRepo.GetPublicIdByEmail(email);
+                 publicId = Guid.Parse(await _userRepo.GetPublicIdByEmail(email));
             } catch (NpgsqlException ex)
             {
                 _logger.LogCritical(ex, "Something unexpected happened.");

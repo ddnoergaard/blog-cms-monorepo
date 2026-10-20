@@ -63,7 +63,7 @@ namespace backend_API.Repositories
                                 Email = Convert.ToString(reader["email"]),
                                 HashPassword = Convert.ToString(reader["hash_password"]),
                                 Username = Convert.ToString(reader["username"]),
-                                PublicId = Convert.ToString(reader["public_id"]),
+                                PublicId = Guid.Parse(Convert.ToString(reader["public_id"])),
                                 IsActive = Convert.ToBoolean(reader["is_active"])
                             };
                         }
@@ -91,7 +91,7 @@ namespace backend_API.Repositories
                         {
                             return new GetPublicUserDTO
                             {
-                                UUID = Convert.ToString(reader["public_id"]),
+                                UUID = Guid.Parse(Convert.ToString(reader["public_id"])),
                                 FirstName = Convert.ToString(reader["first_name"]),
                                 LastName = Convert.ToString(reader["last_name"]),
                                 Email = Convert.ToString(reader["email"]),
@@ -189,7 +189,7 @@ namespace backend_API.Repositories
         //ESSENTIAL END
         //NON ESSENTIAL START
 
-        public async Task<int> GetInternalIdByPublicId(string publicId)
+        public async Task<int> GetInternalIdByPublicId(Guid publicId)
         {
             string sqlQuery = "SELECT id FROM users WHERE public_id = @publicId";
 
@@ -199,6 +199,7 @@ namespace backend_API.Repositories
 
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
                 {
+                    cmd.Parameters.AddWithValue("@publicId", publicId);
                     return Convert.ToInt32(await cmd.ExecuteScalarAsync());
                 }
             }
