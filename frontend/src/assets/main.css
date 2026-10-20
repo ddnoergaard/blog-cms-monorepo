@@ -1,0 +1,56 @@
+:root {
+  /* Page background, warm off-white that is easy on the eyes for long reads */
+  --bg: #FAF8F5 !important;
+  /* Cards, post previews, header and footer panels */
+  --surface: #FFFFFF !important;
+  /* Main body text and headings, near-black for readability */
+  --text: #1F2328 !important;
+  /* Secondary text: dates, captions, author names, meta info */
+  --muted: #6B7280 !important;
+  /* Dividers, card outlines, input borders, table lines */
+  --border: #E7E2DA !important;
+  /* Primary accent: links, buttons, active nav items */
+  --accent: #2F6F5E !important;
+  /* Hover and focus state for links and buttons */
+  --accent-hover: #245748 !important;
+  /* Soft accent background: tags, blockquotes, inline code, callouts */
+  --accent-tint: #E3F0EC !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Page background, deep charcoal instead of pure black to reduce glare */
+    --bg: #14171A;
+    /* Cards, post previews, header and footer panels */
+    --surface: #1C2024;
+    /* Main body text and headings, soft off-white to avoid harsh contrast */
+    --text: #E8E6E1;
+    /* Secondary text: dates, captions, author names, meta info */
+    --muted: #9AA0A6;
+    /* Dividers, card outlines, input borders, table lines */
+    --border: #2A2F35;
+    /* Primary accent: links, buttons, active nav items (lighter for dark backgrounds) */
+    --accent: #5FB89F;
+    /* Hover and focus state for links and buttons */
+    --accent-hover: #7CCBB4;
+    /* Subtle accent background: tags, blockquotes, inline code, callouts */
+    --accent-tint: #1D2F2A;
+  }
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: var(--text);
+  font-family: "Fraunces Variable", serif;
+  letter-spacing: 1px;
+}
+
+body {
+  width: 100dvw;
+  height: auto;
+  background-color: var(--bg);
+}
