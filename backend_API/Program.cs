@@ -17,6 +17,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 //SERVICES
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 //SECURITY
 builder.Services.AddSingleton<PasswordHasher>();
@@ -48,15 +49,18 @@ builder.Logging.AddConsole(); //adding the console for the logging
 
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(); //this is most likely obsolete since i use swagger now
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
