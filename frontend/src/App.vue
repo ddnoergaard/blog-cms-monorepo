@@ -1,9 +1,10 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
+const route = useRoute()
 </script>
 
 <template>
-  <header>
+  <header v-if="!route.meta.hideNav">
     <nav>
       <RouterLink id="nav-logo" to="/">[ the common room ]</RouterLink>
       <div id="nav-item-container">

@@ -1,14 +1,14 @@
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
+//import axios from 'axios';
+//import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
+//const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
-var displayList = ref([]);
+/*var displayList = ref([]);
 const newArticles = axios.get(baseUrl + 'api/articles?new=true');
 const popularArticles = ref([]);
-
+*/
 </script>
 
 <template>
