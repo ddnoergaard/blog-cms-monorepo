@@ -19,7 +19,11 @@ const route = useRoute()
     </nav>
   </header>
   <main>
-    <RouterView />
+    <RouterView v-slot="{ Component }">
+      <Transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </main>
   <footer>
 
@@ -27,6 +31,18 @@ const route = useRoute()
 </template>
 
 <style scoped>
+/* transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/*transition end*/
 header {
   width: 100%;
   height: 10dvh;
