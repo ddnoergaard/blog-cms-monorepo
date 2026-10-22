@@ -196,7 +196,99 @@ namespace backend_API.Repositories
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
+        }
 
+        public async Task UpdatePostAsync(UpdateDTO dto)
+        {
+            string sqlStatement = "UPDATE posts " +
+                "SET title = @title, body = @body, slug = @slug, cover_image_url = @coverImg, updated_at = @updatedAt " +
+                "WHERE id = @id";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
+                {
+                    cmd.Parameters.AddWithValue("@title", dto.Title);
+                    cmd.Parameters.AddWithValue("@body", dto.Body);
+                    cmd.Parameters.AddWithValue("@slug", dto.Slug);
+                    cmd.Parameters.AddWithValue("@coverImg", dto.CoverImageUrl);
+                    cmd.Parameters.AddWithValue("@updatedAt", dto.UpdatedAt);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Post>> GetPostsAsync()
+        {
+            string sqlQuery = "SELECT * FROM posts";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
+                {
+                    using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        List<Post> posts = new();
+                        while (await reader.ReadAsync())
+                        {
+                            posts.Add(new Post
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                UserId = Convert.ToInt32(reader["user_id"]),
+                                Title = Convert.ToString(reader["title"]),
+                                Body = Convert.ToString(reader["body"]),
+                                CreatedAt = Convert.ToDateTime(reader["created_at"]),
+                                UpdatedAt = Convert.ToDateTime(reader["updated_at"]),
+                                Slug = Convert.ToString(reader["slug"]),
+                                Status = Convert.ToString(reader["status"]),
+                                PublishedAt = Convert.ToDateTime(reader["published_at"]),
+                                CoverImageUrl = Convert.ToString(reader["cover_image_url"])
+                            });
+                        }
+                        return posts;
+                    }
+                }
+            }
+        }
+
+        public async Task<Post?> GetPostAsync(int id)
+        {
+            string sqlQuery = "SELECT * FROM posts " +
+                "WHERE id = @id";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                    using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new Post
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                UserId = Convert.ToInt32(reader["user_id"]),
+                                Title = Convert.ToString(reader["title"]),
+                                Body = Convert.ToString(reader["body"]),
+                                CreatedAt = Convert.ToDateTime(reader["created_at"]),
+                                UpdatedAt = Convert.ToDateTime(reader["updated_at"]),
+                                Slug = Convert.ToString(reader["slug"]),
+                                Status = Convert.ToString(reader["status"]),
+                                PublishedAt = Convert.ToDateTime(reader["published_at"]),
+                                CoverImageUrl = Convert.ToString(reader["cover_image_url"])
+                            };
+                        }
+                        return null;
+                    }
+                }
+            }
         }
 
 

@@ -13,5 +13,8 @@ namespace backend_API.Repositories.Interfaces
         Task UpdateCoverImage(UpdateCoverImageUrlDTO dto);
         Task UpdatePublishedAt(UpdatePublishedAtDTO dto);
         Task UpdateTitle(UpdateTitleDTO dto);
+        Task UpdatePostAsync(UpdateDTO dto);
+        Task<IEnumerable<Post>> GetPostsAsync();
+        Task<Post?> GetPostAsync(int id);
     }
 }
