@@ -100,4 +100,9 @@ nav {
   color: var(--bg);
   background-color: var(--accent);
 }
+
+main {
+  width: 100dvw;
+  height: auto;
+}
 </style>

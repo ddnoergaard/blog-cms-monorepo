@@ -23,7 +23,7 @@ async function Login() {
             <RouterLink class="muted-text hover-highlight" to="/">&larr; home</RouterLink>
             <div id="side-main">
                 <div>
-                    <h2 class="white-text">thanks for the looking!</h2>
+                    <h2 class="white-text">thanks for looking!</h2>
                     <p class="white-text" style="width: 75%;">appreciate you looking around. this is a learning project,
                         and
                         everything is
@@ -49,14 +49,13 @@ async function Login() {
         </div>
         <div id="input-container">
             <h1>welcome</h1>
-            <input type="email" v-model="email" placeholder="email@domain.com">
-            <input type="password" v-model="password" placeholder="********">
+            <input type="email" v-model="email" placeholder="Email">
+            <input type="password" v-model="password" placeholder="Password">
             <div id="cta-container">
                 <button class="cta" @click="Login">Login</button>
                 <p>|</p>
-                <RouterLink to="/create-account" class="cta" id="create-accout-link">Create account</RouterLink>
+                <RouterLink to="/create-account" class="cta" id="create-accout-link">don't have an account?</RouterLink>
             </div>
-
         </div>
     </div>
 </template>
