@@ -1,5 +1,14 @@
 <script setup>
+import router from '@/router';
 import { RouterLink } from 'vue-router';
+
+async function handleLogout() {
+    //logout handling here, clear userStore and either localStorage or httpCookie
+    //Would be best to use httpCookie, to prevent cross site scripting
+    //i also need to create a pinia store, to store the user state. this also needs to be cleared on logout
+    await router.push({ name: 'login' })
+}
+
 </script>
 
 <template>
@@ -15,6 +24,7 @@ import { RouterLink } from 'vue-router';
         <div id="nav-bottom">
             <span class="separator"></span>
             <RouterLink :to="{ name: auth - home }">Profile</RouterLink>
+            <button @click="handleLogout">Logout</button>
             <div id="profile-card">
                 <img src="/favicon.ico" alt="">
                 <div id="pc-text">

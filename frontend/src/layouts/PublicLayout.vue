@@ -12,6 +12,7 @@ const route = useRoute()
                 <RouterLink class="nav-item" to="/articles">articles</RouterLink>
                 <RouterLink class="nav-item" to="/bloggers">bloggers</RouterLink>
             </div>
+            <!-- need some management to show the user navigation if userStore has isAuthenticated === True -->
             <div id="nav-buttons-container">
                 <RouterLink class="nav-item" id="nav-login" to="/login">login</RouterLink>
                 <RouterLink id="nav-create-accout" to="/create-account">create account</RouterLink>
