@@ -51,7 +51,7 @@ namespace backend_API.Controllers
                 return BadRequest(ex.Message);
             } catch (UserNotFoundException ex)
             {
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
         }
 
