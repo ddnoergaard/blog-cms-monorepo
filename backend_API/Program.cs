@@ -28,6 +28,16 @@ builder.Services.AddSingleton<PasswordHasher>();
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<JwtHandler>();
 
+//CORS
+string localFrontend = "http://localhost:5173";
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(localFrontend).AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -68,6 +78,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
