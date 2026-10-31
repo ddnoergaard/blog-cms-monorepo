@@ -27,7 +27,7 @@ namespace backend_API.Controllers
             try
             {
                 int newId = await _userService.CreateAsync(dto);
-                return CreatedAtRoute("GetById", new { id = newId }, dto);
+                return Created();
             } catch (ConflictException ex)
             {
                 return BadRequest(ex.Message);

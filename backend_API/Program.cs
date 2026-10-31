@@ -12,11 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //REPOS
-//builder.Services.AddScoped<IUserRepo, UserRepo>();
-//builder.Services.AddScoped<IPostRepo, PostRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IPostRepo, PostRepo>();
 //REPOS - MOQ
-builder.Services.AddScoped<IUserRepo, MoqUserRepo>();
-builder.Services.AddScoped<IPostRepo, MoqPostRepo>();
+//builder.Services.AddScoped<IUserRepo, MoqUserRepo>();
+//builder.Services.AddScoped<IPostRepo, MoqPostRepo>();
 
 //SERVICES
 builder.Services.AddScoped<IUserService, UserService>();
