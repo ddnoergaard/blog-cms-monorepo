@@ -7,6 +7,7 @@ namespace backend_API.Repositories.Moq
 {
     public class MoqUserRepo : IUserRepo
     {
+        private int _nextId = 3;
         private readonly List<User> _users = new List<User>
         {
             new User
@@ -52,171 +53,71 @@ namespace backend_API.Repositories.Moq
 
         public async Task<int> CreateAsync(UserCreateDTO dto)
         {
-            string sqlStatement = "INSERT INTO users(first_name, last_name, email, hash_password, username) VALUES (@firstName, @lastName, @email, @pw, @username) returning id";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            User newUser = new User
             {
-                await con.OpenAsync();
+                Id = ++_nextId,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                HashPassword = dto.HashPassword,
+                Username = dto.Username,
+                PublicId = Guid.NewGuid(),
+                IsActive = true
+            };
 
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
-                {
-                    cmd.Parameters.AddWithValue("@firstName", dto.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", dto.LastName);
-                    cmd.Parameters.AddWithValue("@email", dto.Email);
-                    cmd.Parameters.AddWithValue("@pw", dto.HashPassword);
-                    cmd.Parameters.AddWithValue("@username", dto.Username);
+            _users.Add(newUser);
+            return newUser.Id;
 
-                    return Convert.ToInt32(await cmd.ExecuteScalarAsync());
-
-                }
-            }
         }
 
         public async Task<User?> GetByInternalIdAsync(int id)
         {
-            string sqlQuery = "SELECT * FROM users WHERE id = @id";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            return new User
-                            {
-                                Id = Convert.ToInt32(reader["id"]),
-                                FirstName = Convert.ToString(reader["first_name"]),
-                                LastName = Convert.ToString(reader["last_name"]),
-                                Email = Convert.ToString(reader["email"]),
-                                HashPassword = Convert.ToString(reader["hash_password"]),
-                                Username = Convert.ToString(reader["username"]),
-                                PublicId = Guid.Parse(Convert.ToString(reader["public_id"])),
-                                IsActive = Convert.ToBoolean(reader["is_active"])
-                            };
-                        }
-                        return null;
-                    }
-                }
-            }
+            return _users.FirstOrDefault(u => u.Id == id);
         }
 
         public async Task<GetPublicUserDTO?> GetByPublicIdAsync(string uuid)
         {
-            string sqlQuery = "SELECT * FROM users WHERE public_id = @uuid";
+            User internalUser = _users.FirstOrDefault(u => Convert.ToString(u.PublicId) == uuid);
 
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            return new GetPublicUserDTO
             {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@uuid", uuid);
-
-                    using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (await reader.ReadAsync())
-                        {
-                            return new GetPublicUserDTO
-                            {
-                                UUID = Guid.Parse(Convert.ToString(reader["public_id"])),
-                                FirstName = Convert.ToString(reader["first_name"]),
-                                LastName = Convert.ToString(reader["last_name"]),
-                                Email = Convert.ToString(reader["email"]),
-                                Username = Convert.ToString(reader["username"])
-                            };
-                        }
-                        return null;
-                    }
-                }
-            }
+                UUID = internalUser.PublicId,
+                FirstName = internalUser.FirstName,
+                LastName = internalUser.LastName,
+                Email = internalUser.Email,
+                Username = internalUser.Username
+            };
         }
 
         public async Task UpdateNonEssentialUserData(UpdateNonEssentialUserDataDTO dto, int internalId)
         {
-            string sqlStatement = "UPDATE users " +
-                "SET first_name = @first, last_name = @last, email = @email, username = @username " +
-                "WHERE id = @id";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            foreach (User u in _users)
             {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
+                if (u.Id == internalId)
                 {
-                    cmd.Parameters.AddWithValue("@first", dto.FirstName);
-                    cmd.Parameters.AddWithValue("@last", dto.LastName);
-                    cmd.Parameters.AddWithValue("@email", dto.Email);
-                    cmd.Parameters.AddWithValue("@username", dto.Username);
-                    cmd.Parameters.AddWithValue("@id", internalId);
-
-                    await cmd.ExecuteNonQueryAsync();
+                    u.FirstName = dto.FirstName;
+                    u.LastName = dto.LastName;
+                    u.Email = dto.Email;
+                    u.Username = dto.Username;
                 }
             }
         }
 
         public async Task UpdatePassword(string password, int internalId)
         {
-            string sqlStatement = "UPDATE users " +
-                "SET hash_password = @h_pw " +
-                "WHERE id = @id";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
-                {
-                    cmd.Parameters.AddWithValue("@h_pw", password);
-                    cmd.Parameters.AddWithValue("@id", internalId);
-
-                    await cmd.ExecuteNonQueryAsync();
-
-                }
-            }
+            _users.FirstOrDefault(u => u.Id == internalId).HashPassword = password;
         }
 
         public async Task DeleteUserByInteralId(int internalId)
         {
-            string sqlStatement = "DELETE users " +
-                "WHERE id = @id";
+            User userToDelete = _users.FirstOrDefault(u => u.Id == internalId);
 
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
-                {
-                    cmd.Parameters.AddWithValue("@id", internalId);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
+            _users.Remove(userToDelete);
         }
 
         public async Task SetUserInactiveByInternalId(int internalId)
         {
-            string sqlStatement = "UPDATE users " +
-                "SET is_active = false " +
-                "WHERE id = @id";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
-                {
-                    cmd.Parameters.AddWithValue("@id", internalId);
-
-                    await cmd.ExecuteNonQueryAsync();
-                }
-            }
-
+            _users.FirstOrDefault(u => u.Id == internalId).IsActive = false;
         }
 
         //ESSENTIAL END
@@ -224,35 +125,12 @@ namespace backend_API.Repositories.Moq
 
         public async Task<int> GetInternalIdByPublicId(Guid publicId)
         {
-            string sqlQuery = "SELECT id FROM users WHERE public_id = @publicId";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@publicId", publicId);
-                    return Convert.ToInt32(await cmd.ExecuteScalarAsync());
-                }
-            }
+            return _users.FirstOrDefault(u => u.PublicId == publicId).Id;
         }
 
         public async Task<string?> GetPublicIdByEmail(string email)
         {
-            string sqlQuery = "SELECT public_id FROM users WHERE email = @email";
-
-            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
-            {
-                await con.OpenAsync();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-
-                    return Convert.ToString(await cmd.ExecuteScalarAsync());
-                }
-            }
+            return Convert.ToString(_users.FirstOrDefault(u => u.Email == email).PublicId);
         }
 
     }
