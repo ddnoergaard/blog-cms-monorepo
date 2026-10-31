@@ -1,12 +1,19 @@
 <script setup>
 import router from '@/router';
 import { RouterLink } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 async function handleLogout() {
     //logout handling here, clear userStore and either localStorage or httpCookie
     //Would be best to use httpCookie, to prevent cross site scripting
     //i also need to create a pinia store, to store the user state. this also needs to be cleared on logout
-    await router.push({ name: 'login' })
+    const status = authStore.logout();
+
+    if (status) {
+        await router.push('/login')
+    }
 }
 
 </script>

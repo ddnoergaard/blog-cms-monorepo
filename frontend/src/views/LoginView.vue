@@ -1,18 +1,24 @@
 <script setup>
-import axios from 'axios';
 import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const email = ref(null);
 const password = ref(null)
-const status = ref(null)
-const statusText = ref(null)
-
-const baseUrl = import.meta.env.VITE_BACKEND_URL
+const authStore = useAuthStore();
+const router = useRouter();
 
 async function Login() {
-    const r = axios.post(baseUrl + '/api/auth/login')
-    status.value = (await r).status
-    statusText.value = (await r).statusText
+    const success = await authStore.login({
+        email: email.value,
+        password: password.value
+    });
+
+    console.log(authStore.user)
+
+    if (success) {
+        router.push({ name: 'auth-home', params: { publicId: authStore.user.uuid } })
+    }
 }
 
 </script>

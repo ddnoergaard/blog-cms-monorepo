@@ -18,15 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function login(credentials) {
         try {
-            const response = axios.post(baseUrl + 'auth/login', {
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(credentials)
-            });
-        
-            if (!response.ok) throw new Error('Login failed');
-
-            const data = await response.JSON();
-
+            const { data } = await axios.post(`${baseUrl}/Auth/login`, credentials);
             setAuthData(data.user, data.token);
             return true;
         } catch (error) {
@@ -39,6 +31,10 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
         token.value = null;
         localStorage.removeItem('token');
+        if (localStorage.getItem('token') === null) {
+            console.log('credentials removed');
+            return true;
+        }
     }
 
     return {

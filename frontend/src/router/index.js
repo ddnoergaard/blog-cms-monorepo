@@ -6,6 +6,7 @@ import AuthHomeView from '@/views/auth/HomeView.vue'
 import PublicLayout from '@/layouts/PublicLayout.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import AuthFormLayout from '@/layouts/AuthFormLayout.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,13 +28,23 @@ const router = createRouter({
       ]
     },
     {
-      path: '/auth',
+      path: '/:publicId',
       component: AppLayout,
+      meta: {requiresAuth: true},
       children: [
         {path: 'home', name: 'auth-home', component: AuthHomeView}
       ]
     }
   ],
-})
+});
+
+router.beforeEach((to, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    router.push('login');
+  } else {
+    next;
+  }
+});
 
 export default router
