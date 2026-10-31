@@ -1,5 +1,6 @@
 using backend_API.Repositories;
 using backend_API.Repositories.Interfaces;
+using backend_API.Repositories.Moq;
 using backend_API.Security;
 using backend_API.Services;
 using backend_API.Services.Interfaces;
@@ -11,8 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //REPOS
+//builder.Services.AddScoped<IUserRepo, UserRepo>();
+//builder.Services.AddScoped<IPostRepo, PostRepo>();
+//REPOS - MOQ
 builder.Services.AddScoped<IUserRepo, MoqUserRepo>();
-builder.Services.AddScoped<IPostRepo, PostRepo>();
+builder.Services.AddScoped<IPostRepo, MoqPostRepo>();
 
 //SERVICES
 builder.Services.AddScoped<IUserService, UserService>();

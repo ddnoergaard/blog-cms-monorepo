@@ -5,12 +5,12 @@ using Npgsql;
 
 namespace backend_API.Repositories
 {
-    public class MoqUserRepo : IUserRepo
+    public class UserRepo : IUserRepo
     {
         private readonly string _connectionString;
 
 
-        public MoqUserRepo(IConfiguration configuration)
+        public UserRepo(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("LocalConnection");
         }
