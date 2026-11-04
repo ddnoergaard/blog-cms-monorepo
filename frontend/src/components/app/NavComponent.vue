@@ -5,6 +5,8 @@ import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 
+const user = JSON.parse(localStorage.getItem('userData')) || null
+
 async function handleLogout() {
     //logout handling here, clear userStore and either localStorage or httpCookie
     //Would be best to use httpCookie, to prevent cross site scripting
@@ -35,7 +37,7 @@ async function handleLogout() {
             <div id="profile-card">
                 <img src="/favicon.ico" alt="">
                 <div id="pc-text">
-                    <p id="pc-t-name">ddnoergaard</p>
+                    <p id="pc-t-name">{{ user.username }}</p>
                     <p id="pc-t-desc" style=" color: var(--muted);">Followers: 100</p>
                 </div>
             </div>
@@ -47,8 +49,8 @@ async function handleLogout() {
 <style scoped>
 nav {
     display: flex;
-    width: 10dvw;
-    height: 90dvh;
+    width: 12dvw;
+    height: 100dvh;
     position: sticky;
     flex-direction: column;
     justify-content: space-between;

@@ -28,6 +28,12 @@ import { RouterView } from 'vue-router';
 }
 
 #main {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+
+}
+
+main {
+    min-width: 0;
 }
 </style>
