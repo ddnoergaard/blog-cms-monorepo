@@ -2,6 +2,7 @@
 import router from '@/router';
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import NoProfileImageComponent from './NoProfileImageComponent.vue';
 
 const authStore = useAuthStore();
 
@@ -26,6 +27,7 @@ async function handleLogout() {
             <p id="logo">[ The common room ]</p>
             <div id="nav-top-link-container">
                 <RouterLink :to="{ name: auth - home }">Dashboard</RouterLink>
+                <RouterLink :to="{ name: auth - home }">Media Bank</RouterLink>
                 <RouterLink :to="{ name: auth - home }">Posts</RouterLink>
             </div>
 
@@ -33,9 +35,9 @@ async function handleLogout() {
         <div id="nav-bottom">
             <span class="separator"></span>
             <RouterLink :to="{ name: auth - home }">Profile</RouterLink>
-            <button @click="handleLogout">Logout</button>
+            <button id="logout-btn" @click="handleLogout">Logout</button>
             <div id="profile-card">
-                <img src="/favicon.ico" alt="">
+                <NoProfileImageComponent />
                 <div id="pc-text">
                     <p id="pc-t-name">{{ user.username }}</p>
                     <p id="pc-t-desc" style=" color: var(--muted);">Followers: 100</p>
@@ -121,5 +123,21 @@ a:hover {
 
 #pc-t-desc {
     font-size: 0.8rem;
+}
+
+#logout-btn {
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    font-size: 1rem;
+    color: var(--bg);
+    text-align: start;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+#logout-btn:hover {
+    text-decoration-color: var(--bg);
 }
 </style>
