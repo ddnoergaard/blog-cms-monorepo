@@ -1,11 +1,25 @@
 <script setup>
-import { ref } from 'vue';
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { formatDate } from '@/utility/formatDate';
 
 const user = ref(JSON.parse(localStorage.getItem('userData')) || null);
 const date = new Date();
+const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
+const posts = ref(null);
 
+onMounted(async () => {
+    await GetPosts();
+})
+
+async function GetPosts() {
+    const response = await axios.get(`${baseUrl}/Post?uuid=${user.value.uuid}`)
+    console.log(response);
+    console.table(await response.data)
+    posts.value = await response.data;
+}
 
 </script>
 
@@ -28,8 +42,38 @@ const date = new Date();
             <RouterLink class="q-link" :to="{ name: auth - home }">Logout</RouterLink>
         </div>
     </section>
-    <section class="section-container">
+    <section class="section-container col-2">
+        <div class="col-2-container">
+            <h2 style="place-self: center;">Posts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Status</th>
+                        <th>Created at</th>
+                        <th>Updated at</th>
+                        <th>Published at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="post in posts" :key="post.id">
+                        <td><img :src="post.coverImageUrl" alt=""></td>
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.slug }}</td>
+                        <td>{{ post.status }}</td>
+                        <td>{{ formatDate(post.createdAt) }}</td>
+                        <td>{{ formatDate(post.updatedAt) }}</td>
+                        <td>{{ formatDate(post.publishedAt) }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
+        </div>
+        <div class="col-2-container">
+            <h2 style="place-self: center;">Followers</h2>
+        </div>
     </section>
 </template>
 
@@ -73,12 +117,25 @@ section {
 }
 
 .q-link {
-    text-decoration: underline;
-    text-decoration-color: transparent;
     transition: 0.3s;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: .5rem;
 }
 
 .q-link:hover {
-    text-decoration-color: var(--text);
+    border-color: var(--text);
+}
+
+.col-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    gap: 1rem;
+}
+
+.col-2-container {
+    height: fit-content;
+    min-height: 100%;
 }
 </style>
