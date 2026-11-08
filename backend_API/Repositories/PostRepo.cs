@@ -319,8 +319,8 @@ namespace backend_API.Repositories
                                 UpdatedAt = Convert.ToDateTime(reader["updated_at"]),
                                 Slug = Convert.ToString(reader["slug"]),
                                 Status = Convert.ToString(reader["status"]),
-                                PublishedAt = Convert.ToDateTime(reader["published_at"]),
-                                CoverImageUrl = Convert.ToString(reader["cover_image_url"])
+                                PublishedAt = reader["published_at"] == DBNull.Value ? null : Convert.ToDateTime(reader["published_at"]),
+                                CoverImageUrl = reader["cover_image_url"] == DBNull.Value ? null : Convert.ToString(reader["cover_image_url"])
                             });
                         }
                         return returnList;
