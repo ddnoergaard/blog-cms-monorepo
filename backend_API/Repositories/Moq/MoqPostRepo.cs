@@ -169,6 +169,10 @@ namespace backend_API.Repositories.Moq
             return _posts.FirstOrDefault(p => p.Id == id);
         }
 
+        public async Task<IEnumerable<Post>> GetPostByUser(int userId)
+        {
+            return new List<Post>(_posts.FindAll(p => p.UserId == userId));
+        }
 
     }
 }
