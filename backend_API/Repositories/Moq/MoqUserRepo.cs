@@ -19,7 +19,7 @@ namespace backend_API.Repositories.Moq
                 HashPassword = "hashed_pw_1",
                 Username = "mettehansen",
                 PublicId = Guid.Parse("a1b2c3d4-0001-4000-8000-000000000001"),
-                IsActive = true
+                IsActive = true,
             },
             new User
             {
@@ -30,7 +30,7 @@ namespace backend_API.Repositories.Moq
                 HashPassword = "hashed_pw_2",
                 Username = "larsj",
                 PublicId = Guid.Parse("a1b2c3d4-0002-4000-8000-000000000002"),
-                IsActive = true
+                IsActive = true,
             },
             new User
             {

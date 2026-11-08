@@ -11,5 +11,6 @@ namespace backend_API.Services.Interfaces
         Task UpdateAsync(UpdateDTO dto);
         Task<IEnumerable<Post>> GetPostsAsync();
         Task<Post> GetPostAsync(int id);
+        Task<IEnumerable<Post>> GetPostsByUserAsync(string uuid);
     }
 }

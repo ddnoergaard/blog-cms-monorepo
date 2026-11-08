@@ -291,6 +291,43 @@ namespace backend_API.Repositories
             }
         }
 
+        public async Task<IEnumerable<Post>> GetPostByUser(int userId)
+        {
+            string sqlQuery = "SELECT * FROM posts " +
+                "WHERE user_id = @id";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", userId);
+
+                    using (NpgsqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        List<Post> returnList = new();
+                        while (await reader.ReadAsync())
+                        {
+                            returnList.Add(new Post
+                            {
+                                Id = Convert.ToInt32(reader["id"]),
+                                UserId = Convert.ToInt32(reader["user_id"]),
+                                Title = Convert.ToString(reader["title"]),
+                                Body = Convert.ToString(reader["body"]),
+                                CreatedAt = Convert.ToDateTime(reader["created_at"]),
+                                UpdatedAt = Convert.ToDateTime(reader["updated_at"]),
+                                Slug = Convert.ToString(reader["slug"]),
+                                Status = Convert.ToString(reader["status"]),
+                                PublishedAt = Convert.ToDateTime(reader["published_at"]),
+                                CoverImageUrl = Convert.ToString(reader["cover_image_url"])
+                            });
+                        }
+                        return returnList;
+                    }
+                }
+            }
+        }
 
     }
 }

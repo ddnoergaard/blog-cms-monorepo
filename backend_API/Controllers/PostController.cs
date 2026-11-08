@@ -39,13 +39,13 @@ namespace backend_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetPosts(int? id = null)
+        public async Task<IActionResult> GetPosts([FromQuery] int? postId = null, string? uuid = null)
         {
-            if (id is not null)
+            if (postId is not null)
             {
                 try
                 {
-                    Post post = await _postService.GetPostAsync(id.Value);
+                    Post post = await _postService.GetPostAsync(postId.Value);
                 } catch (UnexpectedException ex)
                 {
                     return BadRequest(ex.Message);
@@ -53,6 +53,22 @@ namespace backend_API.Controllers
                 {
                     return NoContent();
                 }
+            }
+
+            if (uuid is not null)
+            {
+                try
+                {
+                    List<Post> posts = (await _postService.GetPostsByUserAsync(uuid)).ToList();
+                    return Ok(posts);
+                } catch (UnexpectedException ex)
+                {
+                    return BadRequest(ex.Message);
+                } catch (NoPostsFoundException)
+                {
+                    return NoContent();
+                }
+
             }
 
 

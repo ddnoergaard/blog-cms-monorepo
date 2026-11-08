@@ -12,11 +12,13 @@ namespace backend_API.Services
     {
         private readonly IPostRepo _postRepo;
         private readonly ILogger _logger;
+        private readonly IUserService _userService;
 
-        public PostService(IPostRepo postRepo, ILogger<PostService> logger)
+        public PostService(IPostRepo postRepo, ILogger<PostService> logger, IUserService userService)
         {
             _postRepo = postRepo;
             _logger = logger;
+            _userService = userService;
         }
 
         public async Task<Post> CreateAsync(CreatePostDTO dto)
@@ -123,6 +125,27 @@ namespace backend_API.Services
             if (post is null) throw new NoPostFoundException("No post found");
 
             return post;
+        }
+
+        public async Task<IEnumerable<Post>> GetPostsByUserAsync(string uuid)
+        {
+            int internalId = await _userService.GetInternalIdByPublicId(Guid.Parse(uuid));
+
+            List<Post> returnList = new();
+
+            try
+            {
+                returnList = (await _postRepo.GetPostByUser(internalId)).ToList();
+            } catch (NpgsqlException ex)
+            {
+                _logger.LogError(ex, "Unexpected, GetPostsByUserAsync");
+                throw new UnexpectedException("Unexpected, GetPostsByUserAsync", ex);
+            }
+
+            if (returnList.Count() == 0) throw new NoPostsFoundException("No posts found with that userId");
+
+            return returnList;
+
         }
     }
 }

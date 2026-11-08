@@ -10,5 +10,6 @@
         public string Username { get; set; }
         public Guid PublicId { get; set; }
         public bool IsActive { get; set; }
+        public string ProfileImage { get; set; }
     }
 }

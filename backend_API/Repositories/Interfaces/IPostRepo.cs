@@ -16,5 +16,6 @@ namespace backend_API.Repositories.Interfaces
         Task UpdatePostAsync(UpdateDTO dto);
         Task<IEnumerable<Post>> GetPostsAsync();
         Task<Post?> GetPostAsync(int id);
+        Task<IEnumerable<Post>> GetPostByUser(int userId);
     }
 }
