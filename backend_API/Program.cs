@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 //REPOS
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IPostRepo, PostRepo>();
+builder.Services.AddScoped<IFollowerRepo, FollowerRepo>();
 //REPOS - MOQ
 //builder.Services.AddScoped<IUserRepo, MoqUserRepo>();
 //builder.Services.AddScoped<IPostRepo, MoqPostRepo>();
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IPostRepo, PostRepo>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IFollowService, FollowService>();
 
 //SECURITY
 builder.Services.AddSingleton<PasswordHasher>();

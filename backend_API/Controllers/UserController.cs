@@ -1,10 +1,12 @@
 ﻿using backend_API.DTO.User;
 using backend_API.Exceptions;
+using backend_API.Repositories.Interfaces;
 using backend_API.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Security.Claims;
 
 namespace backend_API.Controllers
 {
@@ -13,10 +15,12 @@ namespace backend_API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IFollowService _followService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IFollowService followService)
         {
             _userService = userService;
+            _followService = followService;
         }
 
         [HttpPost]
@@ -54,6 +58,31 @@ namespace backend_API.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        //FOLLOW SYSTEM
+        [HttpPost("{userId:guid}/follow")] //this way only an authorized user can follow, and cant manufactur sending another id in the body 
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> FollowAsync(Guid userId)
+        {
+            Guid currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (currentUserId == userId)
+            {
+                return BadRequest("You can't follow yourself");
+            }
+
+            try
+            {
+                await _followService.CreateAsync(userId.ToString(), currentUserId.ToString());
+                return Created();
+            } catch (UnexpectedException ex)
+            {
+                return BadRequest("Unexpected.");
+            }
+            
+        }
+
 
     }
 }

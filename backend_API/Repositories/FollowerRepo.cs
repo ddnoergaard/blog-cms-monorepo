@@ -1,12 +1,13 @@
 ﻿using backend_API.DTO.Follower;
 using backend_API.Models;
+using backend_API.Repositories.Interfaces;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Npgsql;
 using System.Runtime.CompilerServices;
 
 namespace backend_API.Repositories
 {
-    public class FollowerRepo
+    public class FollowerRepo : IFollowerRepo
     {
         private readonly string _conString;
 
@@ -68,7 +69,25 @@ namespace backend_API.Repositories
                     }
                 }
             }
+        }
 
+        public async Task DeleteAsync(Follow follow)
+        {
+            string sqlStatement = "DELETE FROM followers " +
+                "WHERE following_id = @followingId AND follower_id = @followerId";
+
+            using (NpgsqlConnection con = new NpgsqlConnection(_conString))
+            {
+                await con.OpenAsync();
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand(sqlStatement, con))
+                {
+                    cmd.Parameters.AddWithValue("@followingId", follow.FollowingId);
+                    cmd.Parameters.AddWithValue("@followerId", follow.FollowerId);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
         }
 
     }
