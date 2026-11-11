@@ -4,6 +4,7 @@ using backend_API.Exceptions;
 using backend_API.Models;
 using backend_API.Security;
 using backend_API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -28,6 +29,7 @@ namespace backend_API.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
