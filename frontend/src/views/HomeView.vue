@@ -12,6 +12,29 @@ const moqList = ref([
     { id: 3, title: "test3", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
 ])
 
+const newArticles = ref([
+    { id: 1, title: "Jeg er ny artikel", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+    { id: 2, title: "Ny artikel 2", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+    { id: 3, title: "Og tredje nye artikel", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+])
+
+const popularArticles = ref([
+    { id: 1, title: "Jeg er en pop artikel", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+    { id: 2, title: "Pop artikel 2", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+    { id: 3, title: "Og tredje populære artikel", imageUrl: "/favicon.ico", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id efficitur eros. Nunc commodo dolor eu turpis ultrices, id egestas massa egestas. Donec non tempus risus", publishedAt: "25/10/2026" },
+])
+
+function showNewArticles() {
+    moqList.value = newArticles.value;
+    console.log("Show new articles")
+}
+
+function showPopularArticles() {
+    moqList.value = popularArticles.value;
+    console.log("Show pop articles")
+}
+
+
 //const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
 /*var displayList = ref([]);

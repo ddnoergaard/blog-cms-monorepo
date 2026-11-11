@@ -28,10 +28,10 @@ const router = createRouter({
       ]
     },
     {
-      //path: '/:publicId',
-      path: '/auth',
+      path: '/:publicId',
+      //path: '/auth',
       component: AppLayout,
-      //meta: {requiresAuth: true},
+      meta: {requiresAuth: true},
       children: [
         {path: 'home', name: 'auth-home', component: AuthHomeView}
       ]
