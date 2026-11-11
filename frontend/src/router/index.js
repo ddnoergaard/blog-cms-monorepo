@@ -7,6 +7,7 @@ import PublicLayout from '@/layouts/PublicLayout.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import AuthFormLayout from '@/layouts/AuthFormLayout.vue'
 import { useAuthStore } from '@/stores/auth'
+import PostView from '@/views/auth/PostView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,8 @@ const router = createRouter({
       component: AppLayout,
       meta: {requiresAuth: true},
       children: [
-        {path: 'home', name: 'auth-home', component: AuthHomeView}
+        {path: 'home', name: 'auth-home', component: AuthHomeView},
+        {path: 'post', name: 'auth-post', component: PostView}
       ]
     }
   ],

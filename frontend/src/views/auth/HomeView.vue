@@ -37,7 +37,7 @@ async function GetPosts() {
         <h2 id="quick-link-header">Quick links</h2>
         <div id="quick-cta-container">
             <RouterLink class="q-link" :to="{ name: auth - home }">Media Bank</RouterLink>
-            <RouterLink class="q-link" :to="{ name: auth - home }">Posts</RouterLink>
+            <RouterLink class="q-link" :to="{ name: auth - post }">Posts</RouterLink>
             <RouterLink class="q-link" :to="{ name: auth - home }">Profile</RouterLink>
             <RouterLink class="q-link" :to="{ name: auth - home }">Logout</RouterLink>
         </div>
