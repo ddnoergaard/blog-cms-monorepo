@@ -29,7 +29,6 @@ namespace backend_API.Controllers
             _userService = userService;
         }
 
-        [Authorize]
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

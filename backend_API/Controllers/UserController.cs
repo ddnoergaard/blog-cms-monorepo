@@ -87,7 +87,7 @@ namespace backend_API.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("follow")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
